@@ -1,3 +1,4 @@
+import 'package:client/contacts.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +14,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: const Color.fromARGB(255, 59, 132, 210),
       ),
-      home: HomePage(),
+      home: const Contacts(),
     );
   }
 }
