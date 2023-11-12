@@ -1,5 +1,7 @@
 import 'package:client/contacts.dart';
+import 'package:client/main_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:client/chatscreen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -14,7 +16,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: const Color.fromARGB(255, 59, 132, 210),
       ),
-      home: const Contacts(),
+      home: ChatScreen(),
     );
   }
 }
