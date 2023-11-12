@@ -1,6 +1,8 @@
-import 'package:client/contacts.dart';
+import 'dart:async';
 import 'package:client/main_screen.dart';
 import 'package:flutter/material.dart';
+
+import 'CreateOrSignIn.dart';
 import 'package:client/chatscreen.dart';
 
 void main() {
@@ -14,9 +16,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 59, 132, 210),
+        scaffoldBackgroundColor: Color.fromARGB(255, 174, 201, 227),
       ),
-      home: ChatScreen(chatId: '1', userId: 'user1'),
+      home: const HomePage(),
     );
   }
 }
@@ -26,7 +28,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    var app = MaterialApp(
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: const Color.fromARGB(255, 59, 132, 210),
       ),
@@ -67,5 +69,13 @@ class HomePage extends StatelessWidget {
         ),
       )),
     );
+    var timer = Timer(
+      const Duration(seconds: 2),
+      () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CreateOrSignInPage()),
+      ),
+    );
+    return app;
   }
 }
