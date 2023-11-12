@@ -16,7 +16,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: const Color.fromARGB(255, 59, 132, 210),
       ),
-      home: ChatScreen(),
+      home: ChatScreen(chatId: '1', userId: 'user1'),
     );
   }
 }
