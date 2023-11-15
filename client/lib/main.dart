@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:client/chatscreen.dart';
 import 'package:flutter/material.dart';
 
 import 'create_or_signin.dart';
@@ -17,7 +16,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: const Color.fromARGB(255, 174, 201, 227),
       ),
-      home: const ChatScreen(chatId: 'dfs', userId: 'sfd'),
+      home: const HomePage()
     );
   }
 }
