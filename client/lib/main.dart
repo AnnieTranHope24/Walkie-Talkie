@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'package:client/main_screen.dart';
+import 'package:client/chatscreen.dart';
 import 'package:flutter/material.dart';
 
-import 'CreateOrSignIn.dart';
-import 'package:client/chatscreen.dart';
+import 'create_or_signin.dart';
 
 void main() {
   runApp(const MainApp());
@@ -16,9 +15,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: Color.fromARGB(255, 174, 201, 227),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 174, 201, 227),
       ),
-      home: const HomePage(),
+      home: const ChatScreen(chatId: 'dfs', userId: 'sfd'),
     );
   }
 }
@@ -69,7 +68,7 @@ class HomePage extends StatelessWidget {
         ),
       )),
     );
-    var timer = Timer(
+    Timer(
       const Duration(seconds: 2),
       () => Navigator.push(
         context,

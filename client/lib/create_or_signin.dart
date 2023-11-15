@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'CreateAccount.dart';
-import 'SignIn.dart';
+import 'create_account.dart';
+import 'signin.dart';
 
 class CreateOrSignInPageFormState extends State<CreateOrSignInPageForm> {
   @override

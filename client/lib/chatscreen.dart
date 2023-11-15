@@ -1,10 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:stomp_dart_client/stomp.dart';
-import 'package:stomp_dart_client/stomp_config.dart';
-import 'package:stomp_dart_client/stomp_frame.dart';
-
 import 'package:http/http.dart' as http;
 
 class ChatScreen extends StatefulWidget {
@@ -28,12 +25,9 @@ class ChatState extends State<ChatScreen> {
   ChatState(this.chatId, this.userId);
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     getMessages();
-    // _client = StompClient(
-    //     config: StompConfig(url: webSocketUrl, onConnect: onConnectCallback));
-    // _client.activate();
   }
 
   void getMessages() async {
@@ -62,23 +56,10 @@ class ChatState extends State<ChatScreen> {
     }
   }
 
-  void onConnectCallback(StompFrame? connectFrame) async {
-    // _client.subscribe(
-    //     //destination: '/topic/chat/${widget.chatId}',
-    //     destination: '/chat/getMessages',
-    //     headers: {},
-    //     callback: (frame) {
-    //       print(frame.body);
-    //       // Received a frame for this subscription
-    //       messages = jsonDecode(frame.body!).reversed.toList();
-    //     });
-  }
-
   void _sendMessage() {
     final message = messageController.text;
     if (message.isNotEmpty) {
       _client.send(
-        //destination: '/app/chat/${widget.chatId}', // Replace with your chat ID
         destination: '/chat.sendMessage',
         body: json.encode({
           'data': message,
@@ -119,19 +100,19 @@ class ChatState extends State<ChatScreen> {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: messageController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Type a message...',
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: _sendMessage,
                   tooltip: 'Send message',
                 ),
@@ -154,23 +135,23 @@ class ChatState extends State<ChatScreen> {
 class ChatBubble extends StatelessWidget {
   final String text;
   final bool isMe;
-  ChatBubble({required this.text, required this.isMe});
+  const ChatBubble({super.key, required this.text, required this.isMe});
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        padding: EdgeInsets.all(8.0),
-        margin: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color: isMe ? Colors.black : Colors.grey,
           borderRadius: isMe
-              ? BorderRadius.only(
+              ? const BorderRadius.only(
                   topLeft: Radius.circular(20.0),
                   bottomLeft: Radius.circular(20.0),
                   topRight: Radius.circular(20.0),
                 )
-              : BorderRadius.only(
+              : const BorderRadius.only(
                   topRight: Radius.circular(20.0),
                   bottomRight: Radius.circular(20.0),
                   topLeft: Radius.circular(20.0),

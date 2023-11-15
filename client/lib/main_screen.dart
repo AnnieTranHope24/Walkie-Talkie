@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ChatApp extends StatelessWidget {
-  ChatApp({super.key});
+  const ChatApp({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat'),
+        title: const Text('Chat'),
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Search for a name in your contacts',
@@ -20,7 +20,7 @@ class ChatApp extends StatelessWidget {
           ),
           Expanded(
             child: ListView(
-              children: [
+              children: const [
                 ChatPreview(
                   name: 'John Smith',
                   message: 'Hello...',
@@ -35,7 +35,7 @@ class ChatApp extends StatelessWidget {
             ),
           ),
           BottomNavigationBar(
-            items: [
+            items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat),
                 label: 'Chats',
@@ -60,7 +60,7 @@ class ChatPreview extends StatelessWidget {
   final String name;
   final String message;
   final String timeStamp;
-  ChatPreview({
+  const ChatPreview({super.key, 
     required this.name,
     required this.message,
     required this.timeStamp,
@@ -70,7 +70,7 @@ class ChatPreview extends StatelessWidget {
     return Container(
       color: Colors.white,
       child: ListTile(
-        leading: CircleAvatar(),
+        leading: const CircleAvatar(),
         title: Text(name),
         subtitle: Text(message),
         trailing: Text(timeStamp),
