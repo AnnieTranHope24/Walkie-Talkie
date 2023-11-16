@@ -1,39 +1,18 @@
 package com.walkietalkie.chat;
 
 import java.util.*;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
 public class ChatController {
-
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessage sendMessage(
-            @Payload ChatMessage chatMessage
-    ) {
-        return chatMessage;
-    }
-
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public ChatMessage addUser(
-            @Payload ChatMessage chatMessage,
-            SimpMessageHeaderAccessor headerAccessor
-    ) {
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        return chatMessage;
-    }
 
     @PostMapping("/chat/getMessages")
     ResponseEntity<List<ChatMessage>> getMessages(@RequestBody ChatRequest chatRequest ) {
@@ -49,5 +28,13 @@ public class ChatController {
         return new ResponseEntity<>(msgs, HttpStatus.OK);
     }
 
+    @GetMapping("/chat/loadMessages")
+    ResponseEntity<List<ChatPreview>> loadMessages() {
+        List<ChatPreview> chatprev = new ArrayList<>();
+        chatprev.add(new ChatPreview("John Smith", "Hello...", "Now"));
+        chatprev.add(new ChatPreview("Alice Johnson", "How are you?", "1 hour ago"));
+
+        return new ResponseEntity<>(chatprev, HttpStatus.OK);
+    }
     private static record ChatRequest(String me, String other) { };
 }
