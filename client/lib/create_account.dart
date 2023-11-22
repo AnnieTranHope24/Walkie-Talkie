@@ -1,11 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class CreateAccountPageFormState extends State<CreateAccountPageForm> {
   final _phoneNumberForm = GlobalKey<FormState>();
   final _nameForm = GlobalKey<FormState>();
   final _usernameForm = GlobalKey<FormState>();
   final _passwordForm = GlobalKey<FormState>();
+  final _phoneNumberController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future<String?> createAccount() async {
+    var url = "http://localhost:8080/api/user/create";
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+    final name = _nameController.text;
+    final phonenumber = _phoneNumberController.text;
+    var body = {
+      'Username': username,
+      'Password': password,
+      'Name': name,
+      'Phonenumber': phonenumber
+    };
+    var postBody = jsonEncode(body);
+
+    final response = await http.post(Uri.parse(url),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: postBody);
+
+    if (response.statusCode != 200) {
+      return response.body;
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +73,7 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                       children: [
                         const Text("Enter your Name:"),
                         TextFormField(
+                          controller: _nameController,
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
                               vertical: 10.0,
@@ -73,6 +104,7 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                       children: [
                         const Text("Create a username:"),
                         TextFormField(
+                          controller: _usernameController,
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
                               vertical: 10.0,
@@ -103,6 +135,7 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                       children: [
                         const Text("Enter your Phone Number:"),
                         TextFormField(
+                          controller: _phoneNumberController,
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
                               vertical: 10.0,
@@ -141,6 +174,7 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                       children: [
                         const Text("Create a Password:"),
                         TextFormField(
+                          controller: _passwordController,
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
                               vertical: 10.0,
@@ -177,6 +211,25 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                       _usernameForm.currentState!.validate();
                       _phoneNumberForm.currentState!.validate();
                       _passwordForm.currentState!.validate();
+                      createAccount().then((value) => {
+                            if (value != null)
+                              {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(value),
+                                  ),
+                                )
+                              }
+                            else
+                              {
+                                // go to contacts list page
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Go to contacts list page"),
+                                  ),
+                                )
+                              }
+                          });
                     },
                     child: const SizedBox(
                       width: 140,
