@@ -36,5 +36,14 @@ public class ChatController {
 
         return new ResponseEntity<>(chatprev, HttpStatus.OK);
     }
+
+    @GetMapping("/chat/loadContacts")
+    ResponseEntity<List<ContactPreview>> loadContacts() {
+        List<ContactPreview> contactprev = new ArrayList<>();
+        contactprev.add(new ContactPreview("John Smith", "+1 123 456 7890"));
+        contactprev.add(new ContactPreview("Alice Johnson", "+1 234 567 8901"));
+
+        return new ResponseEntity<>(contactprev, HttpStatus.OK);
+    }
     private static record ChatRequest(String me, String other) { };
 }
