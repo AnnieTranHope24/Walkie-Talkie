@@ -1,0 +1,13 @@
+server:
+    port: 80
+spring:
+    datasource:
+        url: jdbc:sqlserver://localhost;trustServerCertificate=true
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        username: ${USERNAME_392}
+        password: ${PASSWORD_392}
+
+    jpa:
+        properties:
+            hibernate:
+                "[default_schema]": 'Walkie' 

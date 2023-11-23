@@ -8,8 +8,9 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import com.walkietalkie.chat.ChatMessage;
-import com.walkietalkie.chat.MessageType;
+import com.walkietalkie.model.ChatMessage;
+import com.walkietalkie.model.MessageType;
+
 
 @Component
 @Slf4j
@@ -25,8 +26,8 @@ public class WebSocketEventListener {
         if (username != null) {
             log.info("user disconnected: {}", username);
             var chatMessage = ChatMessage.builder()
-                    .type(MessageType.LEAVE)
-                    .sender(username)
+                    // .type(MessageType.LEAVE)
+                    // .sender(username)
                     .build();
             messagingTemplate.convertAndSend("/topic/public", chatMessage);
         }

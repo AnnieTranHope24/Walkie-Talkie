@@ -1,4 +1,4 @@
-package com.walkietalkie.chat;
+package com.walkietalkie.controllers;
 
 import lombok.*;
 
