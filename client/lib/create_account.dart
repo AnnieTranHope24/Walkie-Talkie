@@ -14,7 +14,7 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
   final _passwordController = TextEditingController();
 
   Future<String?> createAccount() async {
-    var url = "http://localhost:8080/api/user/create";
+    var url = "http://localhost:80/api/user/create";
     final username = _usernameController.text;
     final password = _passwordController.text;
     final name = _nameController.text;
@@ -31,7 +31,7 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
         headers: {"Content-Type": "application/json; charset=UTF-8"},
         body: postBody);
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
       return response.body;
     }
     return null;

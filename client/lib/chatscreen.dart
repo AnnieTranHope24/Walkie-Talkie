@@ -5,24 +5,27 @@ import 'package:stomp_dart_client/stomp.dart';
 import 'package:http/http.dart' as http;
 
 class ChatScreen extends StatefulWidget {
-  final String chatId;
-  final String userId;
+  final String receiverUserName;
+  final String senderUserName;
 
-  const ChatScreen({super.key, required this.chatId, required this.userId});
+  const ChatScreen(
+      {super.key,
+      required this.receiverUserName,
+      required this.senderUserName});
 
   @override
-  State<StatefulWidget> createState() => ChatState(chatId, userId);
+  State<StatefulWidget> createState() =>
+      ChatState(receiverUserName, senderUserName);
 }
 
 class ChatState extends State<ChatScreen> {
-  final String webSocketUrl = '127.0.0.1:8080';
   late StompClient _client;
   final TextEditingController messageController = TextEditingController();
   List<Map<String, dynamic>> messages = List.empty();
-  final String userId;
-  final String chatId;
+  final String senderUserName;
+  final String receiverUserName;
 
-  ChatState(this.chatId, this.userId);
+  ChatState(this.receiverUserName, this.senderUserName);
 
   @override
   void initState() {
@@ -31,11 +34,11 @@ class ChatState extends State<ChatScreen> {
   }
 
   void getMessages() async {
-    var url = "http://localhost:8080/api/chat/getMessages";
+    var url = "http://localhost:80/api/chat/getChatMessages";
 
     var body = {
-      'me': userId,
-      'other': "afijadofnds",
+      'SenderUserName': senderUserName,
+      'ReceiverUserName': receiverUserName,
     };
     var postBody = jsonEncode(body);
 
@@ -47,25 +50,41 @@ class ChatState extends State<ChatScreen> {
       List<dynamic> jsonList = jsonDecode(response.body);
       List<Map<String, dynamic>> chatList = [];
       for (var chat in jsonList) {
-        var fromMe = chat['sender'] == userId;
+        var fromMe = chat['sender']['userName'] == senderUserName;
         chatList.add({'data': chat['content'], 'isMe': fromMe});
       }
       setState(() => messages = chatList);
     } else {
-      throw Exception('Failed to get players');
+      throw Exception('Failed to get messages');
     }
   }
 
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
     final message = messageController.text;
     if (message.isNotEmpty) {
-      _client.send(
-        destination: '/chat.sendMessage',
-        body: json.encode({
-          'data': message,
-          'userId': widget.userId
-        }), // Format the message as needed
-      );
+      var url = "http://localhost:80/api/chat/addChatMessage";
+
+      var body = {
+        'SenderUserName': senderUserName,
+        'ReceiverUserName': receiverUserName,
+        'Content': message,
+        'Type': 'chat',
+      };
+
+      var postBody = jsonEncode(body);
+
+      final response = await http.post(Uri.parse(url),
+          headers: {"Content-Type": "application/json; charset=UTF-8"},
+          body: postBody);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          messages.add({'data': message, 'isMe': true});
+        });
+      } else {
+        throw Exception('Failed to send message');
+      }
+
       messageController.clear();
     }
   }

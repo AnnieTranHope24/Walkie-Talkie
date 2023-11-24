@@ -1,6 +1,10 @@
 server:
     port: 80
 spring:
+    h2:
+        console.enabled: true
+    liquibase:
+        change-log: classpath:db/migration/changelog.xml
     datasource:
         url: jdbc:sqlserver://localhost;trustServerCertificate=true
         driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver

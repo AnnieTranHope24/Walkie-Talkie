@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:client/chatscreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class SignInPageFormState extends State<SignInPageForm> {
   final _passwordController = TextEditingController();
 
   Future<bool> checkDataBase() async {
-    var url = "http://localhost:8080/api/user/check";
+    var url = "http://localhost:80/api/user/check";
     final username = _usernameController.text;
     final password = _passwordController.text;
 
@@ -142,12 +143,15 @@ class SignInPageFormState extends State<SignInPageForm> {
                               }
                             else
                               {
-                                // go to chat list page
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Going to chats page"),
-                                  ),
-                                )
+                                () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ChatScreen(
+                                                receiverUserName: 'ghg',
+                                                senderUserName: 'hgg',
+                                              )),
+                                    ),
                               }
                           });
                     },
