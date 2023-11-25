@@ -3,25 +3,26 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Contacts extends StatefulWidget {
-  final String userID;
-  const Contacts({super.key, required this.userID});
+  final String userName;
+  const Contacts({super.key, required this.userName});
 
   @override
-  State<StatefulWidget> createState() => ContactState(userID);
+  // ignore: no_logic_in_create_state
+  State<StatefulWidget> createState() => ContactState(userName);
 }
 
 class ContactState extends State<Contacts> {
-  final String userID;
+  final String userName;
   List<ContactItem> contactPreviews = List.empty();
   List<ContactItem> filterList = List.empty();
   TextEditingController searchContact = TextEditingController();
 
-  ContactState(this.userID);
+  ContactState(this.userName);
 
   @override
   void initState() {
     super.initState();
-    getContactPreviews();
+    getContactPreviews(userName);
   }
 
   @override
@@ -79,17 +80,24 @@ class ContactState extends State<Contacts> {
     );
   }
 
-  void getContactPreviews() async {
-    var url = "http://localhost:8080/api/chat/loadContacts";
-    final response = await http.get(Uri.parse(url),
-        headers: {"Content-Type": "application/json; charset=UTF-8"});
+  void getContactPreviews(String userName) async {
+    var url = "http://localhost:80/api/contact/loadContacts";
+    var body = {
+      'UserName': userName,
+    };
+    var postBody = jsonEncode(body);
+
+    final response = await http.post(Uri.parse(url),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: postBody);
+
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body);
       List<ContactItem> previews = [];
       for (var contacts in jsonList) {
         previews.add(ContactItem(
-          contactName: contacts['name'],
-          phoneNumber: contacts['phoneNumber'],
+          contactName: contacts['contactName'],
+          phoneNumber: contacts['contact']['phoneNumber'],
         ));
       }
       setState(() => contactPreviews = previews);
@@ -136,7 +144,8 @@ class ContactState extends State<Contacts> {
             ),
             TextButton(
               onPressed: () {
-                addContact(nameController.text, phoneController.text);
+                _addContact(
+                    nameController.text, phoneController.text, userName);
                 Navigator.of(context).pop();
               },
               child: const Text('Add'),
@@ -147,10 +156,30 @@ class ContactState extends State<Contacts> {
     );
   }
 
-  void addContact(String name, String phone) {
-    setState(() {
-      contactPreviews.add(ContactItem(contactName: name, phoneNumber: phone));
-    });
+  Future<void> _addContact(String name, String phone, String userName) async {
+    var url = "http://localhost:80/api/contact/addContact";
+    var body = {
+      'UserName': userName,
+      'ContactName': name,
+      'ContactPhoneNumber': phone,
+    };
+    var postBody = jsonEncode(body);
+    final response = await http.post(Uri.parse(url),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: postBody);
+
+    if (response.statusCode != 200) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please enter a registered number"),
+        ),
+      );
+    } else {
+      setState(() {
+        contactPreviews.add(ContactItem(contactName: name, phoneNumber: phone));
+      });
+    }
   }
 }
 
