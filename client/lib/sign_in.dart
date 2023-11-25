@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:client/chatscreen.dart';
+import 'package:client/contacts.dart';
 import 'package:client/main_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -150,7 +152,12 @@ class SignInPageFormState extends State<SignInPageForm> {
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           ChatApp(userName: username)),
-                                ),
+                                  // ChatScreen(
+                                  //   receiverUserName: 'Cusack',
+                                  //   senderUserName: username,
+                                  // )),
+                                  // const Contacts(userName: username)),
+                                )
                               }
                           });
                     },

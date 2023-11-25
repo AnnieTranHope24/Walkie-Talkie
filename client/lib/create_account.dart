@@ -1,3 +1,5 @@
+import 'package:client/create_or_signin.dart';
+import 'package:client/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -222,11 +224,16 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                               }
                             else
                               {
-                                // go to contacts list page
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text("Go to contacts list page"),
+                                    content: Text('Account created!'),
                                   ),
+                                ),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreateOrSignInPageForm()),
                                 )
                               }
                           });

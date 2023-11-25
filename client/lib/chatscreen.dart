@@ -94,11 +94,11 @@ class ChatState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Row(
+        title: Row(
           children: [
-            CircleAvatar(),
-            SizedBox(width: 10),
-            Text('John Smith'),
+            const CircleAvatar(),
+            const SizedBox(width: 10),
+            Text(receiverUserName),
           ],
         ),
       ),

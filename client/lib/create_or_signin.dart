@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'create_account.dart';
 import 'sign_in.dart';
 
-class CreateOrSignInPageFormState extends State<CreateOrSignInPageForm> {
+class CreateOrSignInPageFormState extends State<CreateOrSignInPageForm>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
