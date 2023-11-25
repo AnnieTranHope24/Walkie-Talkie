@@ -8,28 +8,25 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Entity 
 @Accessors(chain = true)
-@Entity
-@Table(name = "Messages")
-public class ChatMessage {
+@Table(name = "Contacts")
+public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(name="message_generator", sequenceName = "message_seq")
-    private Integer id;
-    private String type;
-    private String content;
+    @SequenceGenerator(name="contact_generator", sequenceName = "contact_seq")
+    private Integer id;  
     @ManyToOne
-    @JoinColumn(name = "senderId")
-    private User sender;
+    @JoinColumn(name = "userId")
+    private User user;    
     @ManyToOne
-    @JoinColumn(name = "receiverId")
-    private User receiver;
-    private String timestamp;
+    @JoinColumn(name = "contactId")
+    private User contact;
+    private String contactName; //Name that the user has given to the contact
 }

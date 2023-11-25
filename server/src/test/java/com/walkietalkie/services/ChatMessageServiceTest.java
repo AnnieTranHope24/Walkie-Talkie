@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.walkietalkie.ConnectionFactory;
-import com.walkietalkie.services.ChatMessageService;
 
 public class ChatMessageServiceTest {
     ConnectionFactory connectionFactory = new ConnectionFactory(System.getenv("USERNAME_392"),

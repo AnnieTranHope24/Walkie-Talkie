@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:stomp_dart_client/stomp.dart';
 import 'package:http/http.dart' as http;
 
 class ChatScreen extends StatefulWidget {
@@ -15,11 +15,11 @@ class ChatScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() =>
+      // ignore: no_logic_in_create_state
       ChatState(receiverUserName, senderUserName);
 }
 
 class ChatState extends State<ChatScreen> {
-  late StompClient _client;
   final TextEditingController messageController = TextEditingController();
   List<Map<String, dynamic>> messages = List.empty();
   final String senderUserName;
@@ -69,6 +69,7 @@ class ChatState extends State<ChatScreen> {
         'ReceiverUserName': receiverUserName,
         'Content': message,
         'Type': 'chat',
+        'TimeStamp': DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
       };
 
       var postBody = jsonEncode(body);
@@ -145,7 +146,6 @@ class ChatState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    _client.deactivate();
     messageController.dispose();
     super.dispose();
   }

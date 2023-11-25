@@ -1,18 +1,20 @@
 import 'dart:convert';
+import 'package:client/chatscreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class ChatApp extends StatefulWidget {
-  final String userID;
-  const ChatApp({super.key, required this.userID});
+  final String userName;
+  const ChatApp({super.key, required this.userName});
 
   @override
-  State<StatefulWidget> createState() => MainScreen(userID);
+  // ignore: no_logic_in_create_state
+  State<StatefulWidget> createState() => MainScreen(userName);
 }
 
 class MainScreen extends State<ChatApp> {
-  final String userID;
-  MainScreen(this.userID);
+  final String userName;
+  MainScreen(this.userName);
   List<ChatMainPreview> chatPreviews = List.empty();
   List<ChatMainPreview> filterList = List.empty();
   TextEditingController searchContact = TextEditingController();
@@ -32,7 +34,7 @@ class MainScreen extends State<ChatApp> {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: searchContact,
               onChanged: filterContacts,
@@ -53,7 +55,8 @@ class MainScreen extends State<ChatApp> {
                   return ChatMainPreview(
                       name: chatPreview.name,
                       message: chatPreview.message,
-                      timeStamp: chatPreview.timeStamp);
+                      timeStamp: chatPreview.timeStamp,
+                      userName: userName);
                 }),
           ),
           BottomNavigationBar(
@@ -78,17 +81,24 @@ class MainScreen extends State<ChatApp> {
   }
 
   void getChatPreviews() async {
-    var url = "http://localhost:8080/api/chat/loadMessages";
-    final response = await http.get(Uri.parse(url),
-        headers: {"Content-Type": "application/json; charset=UTF-8"});
+    var url = "http://localhost:80/api/chat/loadChatPreviews";
+
+    var body = {'SenderUserName': userName};
+
+    var postBody = jsonEncode(body);
+
+    final response = await http.post(Uri.parse(url),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: postBody);
+
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body);
       List<ChatMainPreview> msgs = [];
       for (var chat in jsonList) {
         msgs.add(ChatMainPreview(
-          name: chat['name'],
-          message: chat['message'],
-          timeStamp: chat['timeStamp'],
+          name: chat['contact']['userName'],
+          message: chat['lastMessage'],
+          timeStamp: chat['timestamp'],
         ));
       }
       setState(() => chatPreviews = msgs);
@@ -110,14 +120,17 @@ class ChatMainPreview extends StatelessWidget {
   final String name;
   final String message;
   final String timeStamp;
-  const ChatMainPreview({
-    super.key,
-    String? name,
-    String? message,
-    String? timeStamp,
-  })  : name = name ?? 'Default Name',
+  final String userName;
+  const ChatMainPreview(
+      {super.key,
+      String? name,
+      String? message,
+      String? timeStamp,
+      String? userName})
+      : name = name ?? 'Default Name',
         message = message ?? 'Default message',
-        timeStamp = timeStamp ?? 'Default time';
+        timeStamp = timeStamp ?? 'Default time',
+        userName = userName ?? 'Default user name';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -127,7 +140,16 @@ class ChatMainPreview extends StatelessWidget {
         title: Text(name),
         subtitle: Text(message),
         trailing: Text(timeStamp),
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatScreen(
+                      senderUserName: userName,
+                      receiverUserName: name,
+                    )),
+          );
+        },
       ),
     );
   }

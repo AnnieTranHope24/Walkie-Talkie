@@ -14,5 +14,7 @@ public interface ChatMessageRepository extends CrudRepository<ChatMessage, Integ
 
     public List<ChatMessage> findByReceiverId(Integer receiverId);
 
+    public List<ChatMessage> findBySenderIdAndReceiverId(Integer senderId, Integer receiverId);
+
     public List<ChatMessage> findAll();
 }

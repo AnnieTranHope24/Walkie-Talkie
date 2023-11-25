@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:client/chatscreen.dart';
+import 'package:client/main_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -131,6 +131,7 @@ class SignInPageFormState extends State<SignInPageForm> {
                     onPressed: () {
                       _usernameForm.currentState!.validate();
                       _passwordForm.currentState!.validate();
+                      String username;
                       checkDataBase().then((succeeded) => {
                             if (!succeeded)
                               {
@@ -143,15 +144,13 @@ class SignInPageFormState extends State<SignInPageForm> {
                               }
                             else
                               {
-                                () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ChatScreen(
-                                                receiverUserName: 'ghg',
-                                                senderUserName: 'hgg',
-                                              )),
-                                    ),
+                                username = _usernameController.text,
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChatApp(userName: username)),
+                                ),
                               }
                           });
                     },
