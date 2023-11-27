@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'create_or_signin.dart';
+import 'settings.dart';
 
 void main() {
   runApp(const MainApp());
@@ -13,11 +14,11 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 174, 201, 227),
-      ),
-      home: const HomePage()
-    );
+        theme: ThemeData.light().copyWith(
+          scaffoldBackgroundColor: const Color.fromARGB(255, 174, 201, 227),
+        ),
+        home: HomePage() // SettingsPage(username: 'user1'),
+        );
   }
 }
 

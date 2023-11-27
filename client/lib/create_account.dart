@@ -209,34 +209,35 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                   const Padding(padding: EdgeInsets.all(20)),
                   ElevatedButton(
                     onPressed: () {
-                      _nameForm.currentState!.validate();
-                      _usernameForm.currentState!.validate();
-                      _phoneNumberForm.currentState!.validate();
-                      _passwordForm.currentState!.validate();
-                      createAccount().then((value) => {
-                            if (value != null)
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(value),
+                      if (_nameForm.currentState!.validate() &&
+                          _usernameForm.currentState!.validate() &&
+                          _phoneNumberForm.currentState!.validate() &&
+                          _passwordForm.currentState!.validate()) {
+                        createAccount().then((value) => {
+                              if (value != null)
+                                {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(value),
+                                    ),
+                                  )
+                                }
+                              else
+                                {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Account created!'),
+                                    ),
                                   ),
-                                )
-                              }
-                            else
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Account created!'),
-                                  ),
-                                ),
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CreateOrSignInPageForm()),
-                                )
-                              }
-                          });
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CreateOrSignInPageForm()),
+                                  )
+                                }
+                            });
+                      }
                     },
                     child: const SizedBox(
                       width: 140,

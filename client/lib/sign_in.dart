@@ -131,35 +131,36 @@ class SignInPageFormState extends State<SignInPageForm> {
                   const Padding(padding: EdgeInsets.all(20)),
                   ElevatedButton(
                     onPressed: () {
-                      _usernameForm.currentState!.validate();
-                      _passwordForm.currentState!.validate();
-                      String username;
-                      checkDataBase().then((succeeded) => {
-                            if (!succeeded)
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        "Invalid username and/or password!"),
-                                  ),
-                                )
-                              }
-                            else
-                              {
-                                username = _usernameController.text,
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ChatApp(userName: username)),
-                                  // ChatScreen(
-                                  //   receiverUserName: 'Cusack',
-                                  //   senderUserName: username,
-                                  // )),
-                                  // const Contacts(userName: username)),
-                                )
-                              }
-                          });
+                      if (_usernameForm.currentState!.validate() &&
+                          _passwordForm.currentState!.validate()) {
+                        String username;
+                        checkDataBase().then((succeeded) => {
+                              if (!succeeded)
+                                {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          "Invalid username and/or password!"),
+                                    ),
+                                  )
+                                }
+                              else
+                                {
+                                  username = _usernameController.text,
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ChatApp(userName: username)),
+                                    // ChatScreen(
+                                    //   receiverUserName: 'blah3',
+                                    //   senderUserName: username,
+                                    // )),
+                                    //Contacts(userName: username)),
+                                  )
+                                }
+                            });
+                      }
                     },
                     child: const SizedBox(
                       width: 140,
