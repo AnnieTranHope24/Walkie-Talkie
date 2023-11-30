@@ -69,7 +69,7 @@ class ChatState extends State<ChatScreen> {
         'ReceiverUserName': receiverUserName,
         'Content': message,
         'Type': 'chat',
-        'TimeStamp': DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+        'TimeStamp': DateFormat('yyyy-MM-dd kk:mm').format(DateTime.now()),
       };
 
       var postBody = jsonEncode(body);
