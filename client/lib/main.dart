@@ -14,11 +14,11 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData.light().copyWith(
-          scaffoldBackgroundColor: const Color.fromARGB(255, 174, 201, 227),
-        ),
-        home: HomePage() // SettingsPage(username: 'user1'),
-        );
+      theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: const Color.fromARGB(255, 174, 201, 227),
+      ),
+      home: const HomePage(),
+    );
   }
 }
 

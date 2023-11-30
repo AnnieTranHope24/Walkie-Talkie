@@ -3,6 +3,9 @@ import 'package:client/chatscreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
+import 'settings.dart';
+import 'contacts.dart';
+
 class ChatApp extends StatefulWidget {
   final String userName;
   const ChatApp({super.key, required this.userName});
@@ -18,6 +21,7 @@ class MainScreen extends State<ChatApp> {
   List<ChatMainPreview> chatPreviews = List.empty();
   List<ChatMainPreview> filterList = List.empty();
   TextEditingController searchContact = TextEditingController();
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -31,51 +35,61 @@ class MainScreen extends State<ChatApp> {
       appBar: AppBar(
         title: const Text('Chat'),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: searchContact,
-              onChanged: filterContacts,
-              decoration: const InputDecoration(
-                hintText: 'Search for a name in your contacts',
+      body: [
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: searchContact,
+                onChanged: filterContacts,
+                decoration: const InputDecoration(
+                  hintText: 'Search for a name in your contacts',
+                ),
               ),
             ),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: searchContact.text.isEmpty
+                      ? chatPreviews.length
+                      : filterList.length,
+                  itemBuilder: (context, index) {
+                    final chatPreview = searchContact.text.isEmpty
+                        ? chatPreviews[index]
+                        : filterList[index];
+                    return ChatMainPreview(
+                        name: chatPreview.name,
+                        message: chatPreview.message,
+                        timeStamp: chatPreview.timeStamp,
+                        userName: userName);
+                  }),
+            ),
+          ],
+        ),
+        Contacts(userName: userName),
+        SettingsPage(username: userName),
+      ][_selectedIndex],
+      bottomNavigationBar: NavigationBar(
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.chat),
+            label: 'Chats',
           ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: searchContact.text.isEmpty
-                    ? chatPreviews.length
-                    : filterList.length,
-                itemBuilder: (context, index) {
-                  final chatPreview = searchContact.text.isEmpty
-                      ? chatPreviews[index]
-                      : filterList[index];
-                  return ChatMainPreview(
-                      name: chatPreview.name,
-                      message: chatPreview.message,
-                      timeStamp: chatPreview.timeStamp,
-                      userName: userName);
-                }),
+          NavigationDestination(
+            icon: Icon(Icons.contacts),
+            label: 'Contacts',
           ),
-          BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.chat),
-                label: 'Chats',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.contacts),
-                label: 'Contacts',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-            ],
+          NavigationDestination(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
+        onDestinationSelected: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        selectedIndex: _selectedIndex,
       ),
     );
   }
