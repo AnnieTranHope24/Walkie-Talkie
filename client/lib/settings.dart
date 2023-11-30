@@ -50,17 +50,6 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
         body: Stack(
       children: [
-        Positioned(
-          top: 5,
-          left: 5,
-          child: IconButton(
-            onPressed: () => {Navigator.pop(context)},
-            icon: const Icon(
-              Icons.arrow_back,
-            ),
-            splashRadius: 25,
-          ),
-        ),
         Center(
           child: FractionallySizedBox(
             widthFactor: 0.8,
