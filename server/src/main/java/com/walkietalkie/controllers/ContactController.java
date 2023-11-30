@@ -52,12 +52,13 @@ public class ContactController {
     @PostMapping(value = "contact/addContact")
     public ResponseEntity<Contact> addContact(@RequestBody ContactInfo contactInfo) {
         if(userRepository.findByPhoneNumber(contactInfo.ContactPhoneNumber) == null) return new ResponseEntity<Contact>(HttpStatus.BAD_REQUEST);
+        if(userRepository.findByUserName(contactInfo.ContactName)== null) return new ResponseEntity<Contact>(HttpStatus.BAD_REQUEST);
 
         Contact contact = new Contact();
         contact.setContactName(contactInfo.ContactName);
         contact.setUser(userRepository.findByUserName(contactInfo.UserName));
         contact.setContact(userRepository.findByPhoneNumber(contactInfo.ContactPhoneNumber)); 
-
+        
         contactRepository.save(contact);
         return new ResponseEntity<Contact>(contact, HttpStatus.OK);
     }

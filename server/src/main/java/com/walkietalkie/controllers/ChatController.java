@@ -60,8 +60,8 @@ public class ChatController {
         }
 
         return new ResponseEntity<List<ChatMessage>>(messages, HttpStatus.OK);
-    }    
-
+    }
+    
     @PostMapping(value = "chat/addChatMessage")
     public ResponseEntity<String> addChatMessage(@RequestBody ChatMessageInfo info) {
         if ( info.SenderUserName == null || info.SenderUserName.isEmpty() )

@@ -132,10 +132,11 @@ class SignInPageFormState extends State<SignInPageForm> {
                                         builder: (context) =>
                                             ChatApp(userName: username)),
                                     // ChatScreen(
-                                    //   receiverUserName: 'blah3',
+                                    //   receiverUserName:
+                                    //       'contact', //Change receiver to other contact
                                     //   senderUserName: username,
                                     // )),
-                                    //Contacts(userName: username)),
+                                    // Contacts(userName: username)),
                                   )
                                 }
                             });

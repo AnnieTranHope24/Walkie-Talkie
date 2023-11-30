@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
 import 'create_or_signin.dart';
-import 'settings.dart';
 
 void main() {
   runApp(const MainApp());

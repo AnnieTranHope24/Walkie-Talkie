@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'chatscreen.dart';
 
 class Contacts extends StatefulWidget {
   final String userName;
@@ -64,9 +65,23 @@ class ContactState extends State<Contacts> {
                       final chatPreview = searchContact.text.isEmpty
                           ? contactPreviews[index]
                           : filterList[index];
-                      return ContactItem(
-                        contactName: chatPreview.contactName,
-                        phoneNumber: chatPreview.phoneNumber,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatScreen(
+                                senderUserName: userName,
+                                receiverUserName: chatPreview.contactName,
+                              ),
+                            ),
+                          );
+                        },
+                        child: ContactItem(
+                          contactName: chatPreview.contactName,
+                          phoneNumber: chatPreview.phoneNumber,
+                          //onTap: () {},
+                        ),
                       );
                     }),
               ),
@@ -236,6 +251,21 @@ class ContactItem extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ContactsPage extends StatelessWidget {
+  final String userName;
+  const ContactsPage({Key? key, required this.userName}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Contacts'),
+      ),
+      body: Contacts(userName: userName),
     );
   }
 }
