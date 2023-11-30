@@ -170,7 +170,8 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                           _phoneNumberForm.currentState!.validate() &&
                           _passwordForm.currentState!.validate()) {
                         createAccount().then((value) => {
-                              if (value != null)
+                              if (value != null &&
+                                  value.toLowerCase() != "all good!")
                                 {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
@@ -189,7 +190,7 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const CreateOrSignInPageForm()),
+                                            const SignInPage()),
                                   )
                                 }
                             });
