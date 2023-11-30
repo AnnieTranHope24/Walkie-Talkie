@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import "validators.dart";
+
 class CreateAccountPageFormState extends State<CreateAccountPageForm> {
   final _phoneNumberForm = GlobalKey<FormState>();
   final _nameForm = GlobalKey<FormState>();
@@ -83,15 +85,7 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                             ),
                             helperText: " ",
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your name';
-                            }
-                            if (RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
-                              return null;
-                            }
-                            return "Names may not be anything other than spaces and alphabetic characters";
-                          },
+                          validator: nameValidator,
                         )
                       ],
                     ),
@@ -114,15 +108,7 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                             ),
                             helperText: " ",
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a username';
-                            }
-                            if (RegExp(r'^[\w\s_\-0-9]+$').hasMatch(value)) {
-                              return null;
-                            }
-                            return "Usernames may include alphabetical characters, underscores '_', hyphens '-', or numerical characters";
-                          },
+                          validator: usernameValidator,
                         )
                       ],
                     ),
@@ -145,20 +131,7 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                             ),
                             helperText: " ",
                           ),
-                          validator: (value) {
-                            if (value == null ||
-                                value
-                                    .isEmpty) // matches any character that is not a number
-                            {
-                              return 'Please enter a phone number';
-                            }
-
-                            if (!RegExp(r'\d{10}').hasMatch(value)) {
-                              return "Invalid phone number format";
-                            }
-
-                            return null;
-                          },
+                          validator: phonenumberValidator,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly
                           ],
@@ -184,24 +157,7 @@ class CreateAccountPageFormState extends State<CreateAccountPageForm> {
                             ),
                             helperText: " ",
                           ),
-                          validator: (value) {
-                            if (value == null ||
-                                value
-                                    .isEmpty) // matches any character that is not a number
-                            {
-                              return 'Please enter a password';
-                            }
-
-                            if (value.length < 8) {
-                              return "Your password must be at least 8 characters";
-                            }
-
-                            if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                              return "Your password must contain an uppercase character";
-                            }
-
-                            return null;
-                          },
+                          validator: passwordValidator,
                         )
                       ],
                     ),

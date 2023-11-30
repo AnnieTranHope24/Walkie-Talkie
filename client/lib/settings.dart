@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:client/validators.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class SettingsPage extends StatelessWidget {
   SettingsPage({super.key, required this.username});
@@ -8,6 +12,38 @@ class SettingsPage extends StatelessWidget {
   final _passwordForm = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  Future<bool> _updateName() async {
+    var url = "http://localhost:80/api/user/changeName";
+    final name = _nameController.text;
+
+    var body = {
+      'Username': username,
+      'NewName': name,
+    };
+    var postBody = jsonEncode(body);
+
+    final response = await http.post(Uri.parse(url),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: postBody);
+    return response.statusCode == 200;
+  }
+
+  Future<bool> _updatePassword() async {
+    var url = "http://localhost:80/api/user/changePassword";
+    final password = _passwordController.text;
+
+    var body = {
+      'Username': username,
+      'NewPassword': password,
+    };
+    var postBody = jsonEncode(body);
+
+    final response = await http.post(Uri.parse(url),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: postBody);
+    return response.statusCode == 200;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +103,7 @@ class SettingsPage extends StatelessWidget {
                                       const Text("New Name:"),
                                       TextFormField(
                                         controller: _nameController,
-                                        validator: (value) {
-                                          if (value == null ||
-                                              value.length == 0) {
-                                            return "Please enter a name";
-                                          }
-                                        },
+                                        validator: nameValidator,
                                       ),
                                     ],
                                   ))
@@ -86,7 +117,19 @@ class SettingsPage extends StatelessWidget {
                                 onPressed: () {
                                   if (_nameForm.currentState!.validate()) {
                                     //send to database
-                                    Navigator.pop(context);
+                                    _updateName().then((succeeded) {
+                                      if (succeeded) {
+                                        Navigator.pop(context);
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content:
+                                                Text("Could not update Name!"),
+                                          ),
+                                        );
+                                      }
+                                    });
                                   }
                                 },
                               )
@@ -114,11 +157,52 @@ class SettingsPage extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const CreateAccountPage()),
-                    // );
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            title: const Text("Change Password"),
+                            content: Column(children: [
+                              Form(
+                                  key: _passwordForm,
+                                  child: Column(
+                                    children: [
+                                      const Text("New Password:"),
+                                      TextFormField(
+                                        controller: _passwordController,
+                                        validator: passwordValidator,
+                                      ),
+                                    ],
+                                  ))
+                            ]),
+                            actions: [
+                              TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel')),
+                              TextButton(
+                                child: const Text("Confirm"),
+                                onPressed: () {
+                                  if (_passwordForm.currentState!.validate()) {
+                                    //send to database
+                                    _updatePassword().then((succeeded) {
+                                      if (succeeded) {
+                                        Navigator.pop(context);
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                "Could not update Password!"),
+                                          ),
+                                        );
+                                      }
+                                    });
+                                  }
+                                },
+                              )
+                            ],
+                          );
+                        });
                   },
                   child: const SizedBox(
                     width: 140,

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:client/chatscreen.dart';
 import 'package:client/contacts.dart';
 import 'package:client/main_screen.dart';
+import 'package:client/validators.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -78,15 +79,7 @@ class SignInPageFormState extends State<SignInPageForm> {
                             ),
                             helperText: " ",
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a username';
-                            }
-                            if (RegExp(r'^[\w\s_\-0-9]+$').hasMatch(value)) {
-                              return null;
-                            }
-                            return "Invalid username!";
-                          },
+                          validator: usernameValidator,
                         )
                       ],
                     ),
@@ -109,21 +102,7 @@ class SignInPageFormState extends State<SignInPageForm> {
                             ),
                             helperText: " ",
                           ),
-                          validator: (value) {
-                            if (value == null ||
-                                value
-                                    .isEmpty) // matches any character that is not a number
-                            {
-                              return 'Please enter a password';
-                            }
-
-                            if (value.length < 8 ||
-                                !RegExp(r'[A-Z]').hasMatch(value)) {
-                              return "Invalid password!";
-                            }
-
-                            return null;
-                          },
+                          validator: passwordValidator,
                         )
                       ],
                     ),

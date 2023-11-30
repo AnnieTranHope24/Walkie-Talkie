@@ -23,6 +23,8 @@ public class UserController {
 
     private static record UsernameAndPassword(String Username, String Password) {};
     private static record UserInfo(String Username, String Password, String Phonenumber, String Name ) {};
+    private static record NameUpdate(String Username, String NewName) {};
+    private static record PasswordUpdate(String Username, String NewPassword) {};
 
     @GetMapping("/user/all")
     ResponseEntity<List<User>> getAllUsers() {
@@ -83,6 +85,68 @@ public class UserController {
         }
 
         User user = new User(info.Username, info.Name, info.Phonenumber, info.Password);
+        user = userRepository.save(user);
+
+        return new ResponseEntity<>("All good!", HttpStatus.OK);
+    }
+
+    @PostMapping("/user/changeName")
+    ResponseEntity<String> changeUserName( @RequestBody NameUpdate info ) {
+        if ( info.Username == null || info.Username.isEmpty() )
+        {
+            return new ResponseEntity<>("No username!", HttpStatus.BAD_REQUEST);
+        }
+
+        if ( info.NewName == null || info.NewName.isEmpty() )
+        {
+            return new ResponseEntity<>("No name!", HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userRepository.findByUserName(info.Username);
+
+        if ( user == null )
+        {
+            return new ResponseEntity<>("Could not find user!", HttpStatus.BAD_REQUEST);
+        }
+
+        if ( user.getName().equals(info.NewName) )
+        {
+            return new ResponseEntity<>("User Name was the same!", HttpStatus.BAD_REQUEST);
+        }
+
+        user.setName(info.NewName);
+
+        user = userRepository.save(user);
+
+        return new ResponseEntity<>("All good!", HttpStatus.OK);
+    }
+
+    @PostMapping("/user/changePassword")
+    ResponseEntity<String> changeUserPassword( @RequestBody PasswordUpdate info ) {
+        if ( info.Username == null || info.Username.isEmpty() )
+        {
+            return new ResponseEntity<>("No username!", HttpStatus.BAD_REQUEST);
+        }
+
+        if ( info.NewPassword == null || info.NewPassword.isEmpty() )
+        {
+            return new ResponseEntity<>("No password!", HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userRepository.findByUserName(info.Username);
+
+        if ( user == null )
+        {
+            return new ResponseEntity<>("Could not find user!", HttpStatus.BAD_REQUEST);
+        }
+
+        if ( user.getPassword().equals(info.NewPassword) )
+        {
+            return new ResponseEntity<>("User Name was the same!", HttpStatus.BAD_REQUEST);
+        }
+
+        user.setPassword(info.NewPassword);
+
         user = userRepository.save(user);
 
         return new ResponseEntity<>("All good!", HttpStatus.OK);
