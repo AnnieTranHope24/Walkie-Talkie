@@ -84,6 +84,7 @@ public class ChatController {
         chatMessageRepository.save(message);
     
         ChatPreview preview = chatPreviewRepository.findByUserIdAndContactId(message.getSender().getId(), message.getReceiver().getId());
+        ChatPreview preview2 = chatPreviewRepository.findByUserIdAndContactId(message.getReceiver().getId(), message.getSender().getId());
         if (preview == null) {
             preview = new ChatPreview();
             preview.setUser(message.getSender());
@@ -95,6 +96,19 @@ public class ChatController {
             preview.setLastMessage(message.getContent());
             preview.setTimestamp(message.getTimestamp());
             chatPreviewRepository.save(preview);
+        }
+
+        if (preview2 == null) {
+            preview2 = new ChatPreview();
+            preview2.setUser(message.getReceiver());
+            preview2.setContact(message.getSender());
+            preview2.setLastMessage(message.getContent());
+            preview2.setTimestamp(message.getTimestamp());
+            chatPreviewRepository.save(preview2);
+        } else {
+            preview2.setLastMessage(message.getContent());
+            preview2.setTimestamp(message.getTimestamp());
+            chatPreviewRepository.save(preview2);
         }
 
         return new ResponseEntity<>(message.getContent(), HttpStatus.OK);

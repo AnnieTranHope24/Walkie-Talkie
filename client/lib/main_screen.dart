@@ -15,83 +15,26 @@ class ChatApp extends StatefulWidget {
   State<StatefulWidget> createState() => MainScreen(userName);
 }
 
-class MainScreen extends State<ChatApp> {
+class Chats extends StatefulWidget {
   final String userName;
-  MainScreen(this.userName);
+  const Chats({super.key, required this.userName});
+
+  @override
+  State<StatefulWidget> createState() => ChatsState(userName: userName);
+}
+
+class ChatsState extends State<Chats> {
+  ChatsState({required this.userName});
+
+  final String userName;
   List<ChatMainPreview> chatPreviews = List.empty();
   List<ChatMainPreview> filterList = List.empty();
   TextEditingController searchContact = TextEditingController();
-  int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
     getChatPreviews();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chat'),
-      ),
-      body: [
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: searchContact,
-                onChanged: filterContacts,
-                decoration: const InputDecoration(
-                  hintText: 'Search for a name in your contacts',
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: searchContact.text.isEmpty
-                      ? chatPreviews.length
-                      : filterList.length,
-                  itemBuilder: (context, index) {
-                    final chatPreview = searchContact.text.isEmpty
-                        ? chatPreviews[index]
-                        : filterList[index];
-                    return ChatMainPreview(
-                        name: chatPreview.name,
-                        message: chatPreview.message,
-                        timeStamp: chatPreview.timeStamp,
-                        userName: userName);
-                  }),
-            ),
-          ],
-        ),
-        Contacts(userName: userName),
-        SettingsPage(username: userName),
-      ][_selectedIndex],
-      bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.chat),
-            label: 'Chats',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.contacts),
-            label: 'Contacts',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        onDestinationSelected: (int index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        selectedIndex: _selectedIndex,
-      ),
-    );
   }
 
   void getChatPreviews() async {
@@ -127,6 +70,94 @@ class MainScreen extends State<ChatApp> {
             contact.name.toLowerCase().contains(search.toLowerCase()))
         .toList();
     setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: searchContact,
+            onChanged: filterContacts,
+            decoration: const InputDecoration(
+              hintText: 'Search for a name in your contacts',
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+              itemCount: searchContact.text.isEmpty
+                  ? chatPreviews.length
+                  : filterList.length,
+              itemBuilder: (context, index) {
+                final chatPreview = searchContact.text.isEmpty
+                    ? chatPreviews[index]
+                    : filterList[index];
+                return ChatMainPreview(
+                    name: chatPreview.name,
+                    message: chatPreview.message,
+                    timeStamp: chatPreview.timeStamp,
+                    userName: userName);
+              }),
+        ),
+      ],
+    );
+  }
+}
+
+class MainScreen extends State<ChatApp> {
+  final String userName;
+  MainScreen(this.userName);
+
+  int _selectedIndex = 0;
+
+  List<Widget> pages = List.empty();
+
+  @override
+  void initState() {
+    super.initState();
+    pages = [
+      Chats(userName: userName),
+      Contacts(userName: userName),
+      SettingsPage(username: userName),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chat'),
+      ),
+      body: pages[_selectedIndex],
+      bottomNavigationBar: NavigationBar(
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.chat),
+            label: 'Chats',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.contacts),
+            label: 'Contacts',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        onDestinationSelected: (int index) {
+          setState(() {
+            _selectedIndex = index;
+            if (index == 0) {
+              pages[0] = Chats(userName: userName);
+            }
+          });
+        },
+        selectedIndex: _selectedIndex,
+      ),
+    );
   }
 }
 

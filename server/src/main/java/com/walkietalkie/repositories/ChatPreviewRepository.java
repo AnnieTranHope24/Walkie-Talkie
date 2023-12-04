@@ -11,5 +11,7 @@ public interface ChatPreviewRepository extends CrudRepository<ChatPreview, Integ
 
     public ChatPreview findByUserIdAndContactId(Integer userId, Integer contactId);
 
+    public List<ChatPreview> findByContactId(Integer contactId);
+
     public List<ChatPreview> findAll();
 }
