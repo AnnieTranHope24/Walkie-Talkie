@@ -12,8 +12,9 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 174, 201, 227),
+      theme: ThemeData(
+        scaffoldBackgroundColor: Color.fromARGB(255, 227, 174, 181),
+        primarySwatch: Colors.pink,
       ),
       home: const HomePage(),
     );
@@ -27,7 +28,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var app = MaterialApp(
       theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 59, 132, 210),
+        scaffoldBackgroundColor: Colors.pink,
       ),
       home: Scaffold(
           body: Center(
