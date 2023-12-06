@@ -142,7 +142,7 @@ class ContactState extends State<Contacts> {
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(labelText: 'Username'),
               ),
               TextField(
                 controller: phoneController,
